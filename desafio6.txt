@@ -1,0 +1,113 @@
+Sistema de ecuaciones utilizado para el desafio:
+
+2.0001x + 2.0002y +  2.0003z = 2.0006 
+2.0000x + 2.0000y +  2.0000z = 1.0000
+2.0002x + 2.0001y +  2.0000z = 1.0003
+
+Este sistema de ecuaciones es un sistema mal condicionado, ya que, todos sus valores (con excepcion del lado derecho) son similares, solo varian en algunos decimales. Esta situacion provocaria que, al momento de operar el la matriz del sistema, para calcular su determinante dicho determinante se aproxime a cero. Se sabe que, si el determinante es cero, la matriz (del sistema) no tiene inversa, pero en este caso el determinante no es cero, pero se aproxima, lo que generaria una inversa de la matriz que al multiplicarla con la matriz original no generaria la matriz identidad deseada. 
+Si la condicional de la matriz del sistema, es igual o mayor a 10^3 o 10^4 el sistema de ecuaciones esta mal condicionado.
+
+---------DETERMINANTE DE LA MATRIZ
+
+det(a) = 8.8825e-20
+
+----------MATRIZ IDENTIDAD:
+
+-0.0841   2.0000   1.4457
+      0        0   2.0000
+-0.5000  -2.0000   3.0000
+
+----------CONDICIONAL DE LA MATRIZ
+
+cond(a) = 6.3929e+16
+
+//////////////////////////////////
+CAMBIOS PARA QUE EL SISTEMA ESTE MEJOR CONDICIONADO
+//////////////////////////////////
+
+----------Nueva matriz
+2.0001x +  2.0009y +  2.0005z = 2.0006
+2.0020x +  2.0005y +  2.0001z = 5.0000
+2.0002x +  2.0008y +  2.0098z = 1.0003
+
+----------DETERMINANTE DE LA NUEVA MATRIZ
+
+det = -4.3256e-05
+
+----------MATRIZ IDENTIDAD
+
+1.0000e+00   1.3666e-13   2.0805e-14
+-9.2794e-14   1.0000e+00   2.8743e-14
+-4.6310e-14   1.2412e-13   1.0000e+00
+
+----------CONDICIONAL DE LA MATRIZ
+
+condicional = 5542.0
+
+
+///////////////////////////////////
+CODIGO EN OCTAVE
+///////////////////////////////////
+
+-------------Primera matriz
+octave:1> a = [2.0001 2.0002 2.0003; 2.0000 2.0000 2.0000; 2.0002 2.0001 2.0000]
+a =
+
+   2.0001   2.0002   2.0003
+   2.0000   2.0000   2.0000
+   2.0002   2.0001   2.0000
+
+octave:2> b = [2.0006; 1.0000; 1.0003]
+b =
+
+   2.0006
+   1.0000
+   1.0003
+
+octave:3> detA = det(a)
+detA = 8.8825e-20
+octave:4> invA = inv(a)
+warning: matrix singular to machine precision, rcond = 9.2514e-18
+invA =
+
+  -2.2516e+15   4.5036e+15  -2.2516e+15
+   4.5033e+15  -9.0072e+15   4.5033e+15
+  -2.2516e+15   4.5036e+15  -2.2516e+15
+
+octave:5> identA = a*invA
+identA =
+
+  -0.0841   2.0000   1.4457
+        0        0   2.0000
+  -0.5000  -2.0000   3.0000
+
+octave:6> condA = cond(a)
+condA = 6.3929e+16
+
+---------------Matriz modificada
+octave:5> a2 = [2.0001 2.0009 2.0005; 2.002 2.0005 2.0001; 2.0002 2.0008 2.0098]
+a2 =
+
+   2.0001   2.0009   2.0005
+   2.0020   2.0005   2.0001
+   2.0002   2.0008   2.0098
+
+octave:6> deta2 = det(a2)
+deta2 = -4.3256e-05
+octave:7> inva2 = inv(a2)
+inva2 =
+
+  -4.3473e+02   4.3481e+02   3.6989e-03
+   5.3217e+02  -4.2539e+02  -1.0637e+02
+  -9.7130e+01  -9.2495e+00   1.0638e+02
+
+octave:8> ida2 = a2*inva2
+ida2 =
+
+   1.0000e+00   1.3666e-13   2.0805e-14
+  -9.2794e-14   1.0000e+00   2.8743e-14
+  -4.6310e-14   1.2412e-13   1.0000e+00
+
+
+octave:9> conda2 = cond(a2)
+conda2 = 5542.0
